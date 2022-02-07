@@ -1,0 +1,80 @@
+version: "3.3"
+
+services:
+  samba-dc:
+    build:
+      context: ./samba-dc
+      dockerfile: Dockerfile
+      args:
+        BUILD_DATE: $$(date --iso-8601=ns)
+        VCS_REF: null
+        HTTP_PROXY: "http://192.168.2.210:7890"
+        HTTPS_PROXY: "http://192.168.2.210:7890"
+    image: samba-dc:latest
+    restart: unless-stopped
+    network_mode: host
+    cap_add:
+      - CAP_SYS_ADMIN
+    #hostname: ${SAMBADC_HOSTNAME:Ndoskrnl-114514}
+    environment:
+      RUN_TYPE: "samba-dc"
+      DOMAIN_ACTION: "provision"
+      BIND_INTERFACES_ONLY: "yes"
+      INTERFACES: ${SAMBADC_INTERFACES:-lo ztqu3omxcs}
+      HOSTIP: "172.30.176.62"
+      HOSTIP6: "fd83:48a:632:6c5a:6099:93ef:4f6c:c1f6"
+      REALM: ${SAMBA_REALM:-GROUNDNET.NDOSKRNL.NET}
+      TZ: ${TZ:-Asia/Shanghai}
+      WORKGROUP: ${SAMBA_WORKGROUP:-GROUNDNET}
+      DNS_BACKEND: "BIND9_DLZ"
+    volumes:
+      - ./named.conf:/etc/bind/named.conf
+      - etc:/etc/samba
+      - lib:/var/lib/samba
+    ports:
+      - 88:88
+      - 88:88/udp
+      - 135:135
+      - 137-138:137-138/udp
+      - 139:139
+      - 389:389
+      - 389:389/udp
+      - 445:445
+      - 464:464
+      - 464:464/udp
+      - 636:636
+      - 3268-3269:3268-3269
+      - 49152-65535
+    secrets:
+      - samba-admin-password
+
+  bind-dc:
+    build:
+      context: ./samba-dc
+      dockerfile: Dockerfile
+      args:
+        BUILD_DATE: $$(date --iso-8601=ns)
+        VCS_REF: null
+        HTTP_PROXY: "http://192.168.2.210:7890"
+        HTTPS_PROXY: "http://192.168.2.210:7890"
+    image: bind-dc:latest
+    restart: unless-stopped
+    network_mode: host
+    cap_add:
+      - CAP_SYS_ADMIN
+    environment:
+      RUN_TYPE: "bind-dc"
+      TZ: ${TZ:-Asia/Shanghai}
+    volumes:
+      - ./named.conf:/etc/bind/named.conf
+      - etc:/etc/samba
+      - lib:/var/lib/samba
+    ports:
+      - 53:53
+
+volumes:
+  etc:
+  lib:
+secrets:
+  samba-admin-password:
+    file: ./samba-admin-password
