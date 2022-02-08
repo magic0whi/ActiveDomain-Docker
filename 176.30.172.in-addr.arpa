@@ -1,0 +1,13 @@
+; Authoritative data for ndoskrnl.net reverse zone
+;
+$TTL 2m
+$ORIGIN 176.30.172.in-addr.arpa.
+@             IN      SOA   ns01.ndoskrnl.net. lollipop.studio.cn.gmail.com. (
+                      2022020801 ; Serial Number
+                      8h         ; Refresh
+                      30m        ; Retry
+                      1w         ; Expire
+                      1h )       ; Negative Cache TTL
+              IN      NS      ns01.ndoskrnl.net.
+62            IN      PTR     ns01.ndoskrnl.net.
+62            IN      PTR     minecraft.ndoskrnl.net.

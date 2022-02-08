@@ -66,6 +66,8 @@ services:
       TZ: ${TZ:-Asia/Shanghai}
     volumes:
       - ./named.conf:/etc/bind/named.conf
+      - ./ndoskrnl.net.zone:/var/bind/ndoskrnl.net.zone
+      - ./176.30.172.in-addr.arpa:/var/bind/176.30.172.in-addr.arpa
       - etc:/etc/samba
       - lib:/var/lib/samba
     ports:

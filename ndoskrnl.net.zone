@@ -1,0 +1,20 @@
+; Authoritative data for ndoskrnl.net zone
+;
+$TTL 2m
+$ORIGIN ndoskrnl.net.
+@         IN      SOA   ns01.ndoskrnl.net. lollipop.studio.cn.gmail.com. (
+                  2022020801 ; Serial Number
+                  8h         ; Refresh
+                  30m        ; Retry
+                  1w         ; Expire
+                  1h )       ; Negative Cache TTL
+          IN      NS    ns01
+ns01      IN      A     172.30.176.62
+@         IN      A     0.0.0.0
+minecraft IN      A     172.30.176.62
+www       IN      CNAME blog.ndoskrnl.net. ; out-of-zone
+mail      IN      A     0.0.0.0 ; TBD
+imap      IN      CNAME mail
+smtp      IN      CNAME mail
+@         IN      MX 10 mail
+@         IN      TXT   "This domain is managed in local network"
