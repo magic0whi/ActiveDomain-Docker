@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
       args:
         BUILD_DATE: $$(date --iso-8601=ns)
-        VCS_REF: null
+        VCS_REF: $$(printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)")
         HTTP_PROXY: "http://192.168.2.210:7890"
         HTTPS_PROXY: "http://192.168.2.210:7890"
     image: samba-dc:latest
@@ -28,7 +28,6 @@ services:
       WORKGROUP: ${SAMBA_WORKGROUP:-GROUNDNET}
       DNS_BACKEND: "BIND9_DLZ"
     volumes:
-      - ./named.conf:/etc/bind/named.conf
       - etc:/etc/samba
       - lib:/var/lib/samba
     ports:
@@ -54,7 +53,7 @@ services:
       dockerfile: Dockerfile
       args:
         BUILD_DATE: $$(date --iso-8601=ns)
-        VCS_REF: null
+        VCS_REF: $$(printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)")
         HTTP_PROXY: "http://192.168.2.210:7890"
         HTTPS_PROXY: "http://192.168.2.210:7890"
     image: bind-dc:latest

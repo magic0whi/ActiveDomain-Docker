@@ -8,7 +8,7 @@ LABEL org.opencontainers.image.authors="Rich Braun docker@instantlinux.net, Prot
     org.label-schema.license=GPL-3.0 \
     org.label-schema.name=samba-dc \
     org.label-schema.vcs-ref=$VCS_REF \
-    org.label-schema.vcs-url=https://github.com/instantlinux/docker-tools
+    org.label-schema.vcs-url=https://github.com/magic0whi/ActiveDomain-Docker
 
 ENV RUN_TYPE=samba-dc \
     ADMIN_PASSWORD_SECRET=samba-admin-password \
