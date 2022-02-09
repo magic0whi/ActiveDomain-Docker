@@ -1,5 +1,4 @@
 version: "3.3"
-
 services:
   samba-dc:
     build:
@@ -8,9 +7,10 @@ services:
       args:
         BUILD_DATE: $$(date --iso-8601=ns)
         VCS_REF: $$(printf "r%s.%s" "$$(git rev-list --count HEAD)" "$$(git rev-parse --short HEAD)")
-        HTTP_PROXY: "http://192.168.2.210:7890"
-        HTTPS_PROXY: "http://192.168.2.210:7890"
+        HTTP_PROXY: "http://172.30.5.83:7890"
+        HTTPS_PROXY: "http://172.30.5.83:7890"
     image: samba-dc:latest
+    container_name: samba-dc
     restart: unless-stopped
     network_mode: host
     cap_add:
@@ -48,15 +48,8 @@ services:
       - samba-admin-password
 
   bind-dc:
-    build:
-      context: ./samba-dc
-      dockerfile: Dockerfile
-      args:
-        BUILD_DATE: $$(date --iso-8601=ns)
-        VCS_REF: $$(printf "r%s.%s" "$$(git rev-list --count HEAD)" "$$(git rev-parse --short HEAD)")
-        HTTP_PROXY: "http://192.168.2.210:7890"
-        HTTPS_PROXY: "http://192.168.2.210:7890"
-    image: bind-dc:latest
+    image: samba-dc:latest
+    container_name: bind-dc
     restart: unless-stopped
     network_mode: host
     cap_add:
@@ -71,7 +64,25 @@ services:
       - etc:/etc/samba
       - lib:/var/lib/samba
     ports:
-      - 53:53
+      - 53:53/udp
+
+  chrony-dc:
+    image: samba-dc:latest
+    container_name: chrony-dc
+    restart: unless-stopped
+    network_mode: host
+    cap_add:
+      - CAP_SYS_NICE
+      - CAP_SYS_TIME
+      - CAP_SYS_RESOURCE
+    environment:
+      RUN_TYPE: "chrony-dc"
+      TZ: ${TZ:-Asia/Shanghai}
+    volumes:
+      - ./chrony.conf:/etc/chrony/chrony.conf
+      - lib:/var/lib/samba
+    ports:
+      - 123:123/udp
 
 volumes:
   etc:

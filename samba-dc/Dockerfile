@@ -1,4 +1,4 @@
-FROM alpine:3.15
+FROM alpine:latest
 ARG BUILD_DATE
 ARG VCS_REF
 ARG HTTP_PROXY
@@ -27,7 +27,7 @@ ENV RUN_TYPE=samba-dc \
 
 COPY entrypoint.sh /usr/local/bin/
 RUN export http_proxy=${HTTP_PROXY} https_proxy=${HTTPS_PROXY} && \
-    apk add --update --no-cache krb5 samba-dc tzdata bind bind-libs bind-tools && \
+    apk add --update --no-cache krb5 samba-dc tzdata bind bind-libs bind-tools chrony && \
     chmod 0755 /usr/local/bin/entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

@@ -45,7 +45,9 @@ if [ ${RUN_TYPE} == "samba-dc" ]; then
   exec samba --model=${MODEL} -i </dev/null
 elif [ ${RUN_TYPE} == "bind-dc" ]; then
   exec named -c /etc/bind/named.conf -g
+elif [ ${RUN_TYPE} == "chrony-dc" ]; then
+  exec chronyd -d -s
 else
-  echo 'Only samba-dc and bind-dc types are supported.'
+  echo 'Only samba-dc and bind-dc and chrony-dc types are supported.'
   exit 1
 fi
