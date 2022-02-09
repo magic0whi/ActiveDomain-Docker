@@ -1,19 +1,14 @@
 #!/bin/sh -e
 
+if [ ! -f /etc/timezone ] && [ ! -z "${TZ}" ]; then
+  echo 'Set timezone'
+  cp /usr/share/zoneinfo/${TZ} /etc/localtime
+  echo ${TZ} >/etc/timezone
+fi
+
 if [ ${RUN_TYPE} == "samba-dc" ]; then
-  if [ -z "${NETBIOS_NAME}" ]; then
-    NETBIOS_NAME=$(hostname -s | tr [a-z] [A-Z])
-  else
-    NETBIOS_NAME=$(echo ${NETBIOS_NAME} | tr [a-z] [A-Z])
-  fi
   REALM=$(echo "${REALM}" | tr [a-z] [A-Z])
   DNS_BACKEND=$(echo "${DNS_BACKEND}" | tr [a-z] [A-Z])
-  
-  if [ ! -f /etc/timezone ] && [ ! -z "${TZ}" ]; then
-    echo 'Set timezone'
-    cp /usr/share/zoneinfo/${TZ} /etc/localtime
-    echo ${TZ} >/etc/timezone
-  fi
   
   if [ ! -f /var/lib/samba/registry.tdb ]; then
     if [ ! -f /run/secrets/${ADMIN_PASSWORD_SECRET} ]; then
@@ -46,6 +41,9 @@ if [ ${RUN_TYPE} == "samba-dc" ]; then
 elif [ ${RUN_TYPE} == "bind-dc" ]; then
   exec named -c /etc/bind/named.conf -g
 elif [ ${RUN_TYPE} == "chrony-dc" ]; then
+  # Folder permissions are not necessary because chronyd is run as root
+  # chown root:chrony /usr/local/samba/var/lib/ntp_signd/
+  # chmod 750 /var/lib/samba/ntp_signd/
   exec chronyd -d -s
 else
   echo 'Only samba-dc and bind-dc and chrony-dc types are supported.'

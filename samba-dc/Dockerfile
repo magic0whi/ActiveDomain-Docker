@@ -4,26 +4,24 @@ ARG VCS_REF
 ARG HTTP_PROXY
 ARG HTTPS_PROXY
 LABEL org.opencontainers.image.authors="Rich Braun docker@instantlinux.net, Proteus Ndoskrnl lollipop.studio.cn@gmail.com" \
-    org.label-schema.build-date=$BUILD_DATE \
-    org.label-schema.license=GPL-3.0 \
-    org.label-schema.name=samba-dc \
-    org.label-schema.vcs-ref=$VCS_REF \
-    org.label-schema.vcs-url=https://github.com/magic0whi/ActiveDomain-Docker
+    org.label-schema.build-date="${BUILD_DATE}" \
+    org.label-schema.license="GPL-3.0" \
+    org.label-schema.name="samba-dc" \
+    org.label-schema.vcs-ref="${VCS_REF}" \
+    org.label-schema.vcs-url="https://github.com/magic0whi/ActiveDomain-Docker"
 
-ENV RUN_TYPE=samba-dc \
-    ADMIN_PASSWORD_SECRET=samba-admin-password \
-    BIND_INTERFACES_ONLY=yes \
+ENV RUN_TYPE="samba-dc" \
+    ADMIN_PASSWORD_SECRET="samba-admin-password" \
+    BIND_INTERFACES_ONLY="yes" \
     HOSTIP= \
     HOSTIP6= \
-    DOMAIN_ACTION=provision \
-    DOMAIN_MASTER=no \
+    DOMAIN_ACTION="provision" \
     INTERFACES="lo eth0" \
-    MODEL=standard \
-    NETBIOS_NAME= \
-    REALM=ad.example.com \
-    TZ=UTC \
-    WORKGROUP=AD \
-    DNS_BACKEND=SAMBA_INTERNAL
+    MODEL="standard" \
+    REALM="AD.EXAMPLE.COM" \
+    TZ="UTC" \
+    WORKGROUP="AD" \
+    DNS_BACKEND="SAMBA_INTERNAL"
 
 COPY entrypoint.sh /usr/local/bin/
 RUN export http_proxy=${HTTP_PROXY} https_proxy=${HTTPS_PROXY} && \
